@@ -2,12 +2,49 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Material del Curso</title>
+  <title>Material del curso</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2em; background: #f4f4f4; }
+    h1 { color: #2c3e50; }
+    #material-list { background: white; padding: 1em; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    li { margin: 0.5em 0; }
+  </style>
 </head>
 <body>
-  <h1>Curso de Economía Experimental</h1>
-  <p>Bienvenidos. Aquí podéis descargar el material del curso:</p>
+  <h1>Material del Curso</h1>
+  <p>A continuación se muestran todos los archivos almacenados en el repositorio:</p>
+  <div id="material-list">
+    <p><i>Cargando lista de materiales...</i></p>
+  </div>
 
-  
+  <script>
+    const user = "Teoriadejuego";   // tu usuario
+    const repo = "almacen";         // nombre del repositorio
+    const path = "";                // carpeta raíz, pon "almacen" si lo guardas en subcarpeta
+
+    async function loadFiles() {
+      const url = `https://api.github.com/repos/${user}/${repo}/contents/${path}`;
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (!Array.isArray(data)) {
+        document.getElementById("material-list").innerHTML = "<p>Error cargando archivos.</p>";
+        return;
+      }
+
+      // crea lista con todos los archivos
+      let html = "<ul>";
+      data.forEach(item => {
+        if (item.type === "file") {
+          html += `<li><a href="${item.download_url}" target="_blank">${item.name}</a></li>`;
+        }
+      });
+      html += "</ul>";
+
+      document.getElementById("material-list").innerHTML = html || "<p>No hay archivos en la carpeta.</p>";
+    }
+
+    loadFiles();
+  </script>
 </body>
 </html>
